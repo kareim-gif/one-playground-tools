@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leah Ferguson — Daily Requirements Calculator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #2b1a0e;
+    color: #f2e4d0;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 500; color: #fdf0e0; margin-bottom: 1.5rem; }
+
+  .hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
+  .av {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: #5c2f0f; border: 1px solid #a0521e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 500; color: #f5c98a; flex-shrink: 0;
+  }
+  .nm { font-size: 17px; font-weight: 500; color: #fdf0e0; }
+  .sb { font-size: 12px; color: #c49a6c; margin-top: 1px; }
+  .al { font-size: 11px; color: #a07850; margin-top: 2px; font-style: italic; }
+
+  .st { font-size: 11px; font-weight: 500; color: #a07850; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+
+  .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .kc { background: #3c2210; border-radius: 8px; padding: 10px 12px; border: 0.5px solid #5c3418; }
+  .kl { font-size: 10px; color: #a07850; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; }
+  .kv { font-size: 22px; font-weight: 500; color: #fdf0e0; }
+  .ks { font-size: 11px; color: #a07850; margin-top: 2px; }
+  .kv-a { color: #f5a83a; }
+  .kv-g { color: #a8cc6a; }
+  .kv-r { color: #e8604a; }
+
+  .pr { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+  .pb-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 5px; }
+  .b-r { background: #5c1e10; color: #f07060; }
+  .b-a { background: #5c3410; color: #f5a83a; }
+  .b-g { background: #2a4010; color: #a8cc6a; }
+
+  .bar { height: 5px; background: #5c3418; border-radius: 3px; margin-top: 6px; overflow: hidden; }
+  .barf { height: 100%; border-radius: 3px; }
+
+  .panel { background: #341e0c; border: 0.5px solid #5c3418; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+
+  .slr { display: grid; grid-template-columns: 170px 1fr 52px; align-items: center; gap: 10px; margin-bottom: .9rem; }
+  .sll { font-size: 12px; color: #c49a6c; }
+  .slv { font-size: 13px; font-weight: 500; color: #fdf0e0; text-align: right; }
+  .slw { position: relative; height: 20px; display: flex; align-items: center; }
+  .slw input[type=range] {
+    width: 100%; margin: 0; z-index: 2; position: relative;
+    background: transparent; -webkit-appearance: none; appearance: none;
+    cursor: pointer; height: 20px;
+  }
+  .slw input[type=range]::-webkit-slider-runnable-track { height: 4px; background: #6e3e1c; border-radius: 2px; }
+  .slw input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: #f5c98a; margin-top: -6px; border: 2px solid #2b1a0e;
+  }
+  .slw input[type=range]::-moz-range-track { height: 4px; background: #6e3e1c; border-radius: 2px; }
+  .slw input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #f5c98a; border: 2px solid #2b1a0e; }
+
+  .ref {
+    position: absolute; width: 12px; height: 12px; border-radius: 50%;
+    border: 2.5px solid #e8a050; background: transparent;
+    top: 50%; margin-top: -6px; z-index: 3; pointer-events: none;
+  }
+
+  .leg { display: flex; gap: 16px; margin-bottom: .85rem; }
+  .li { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #a07850; }
+  .ld { width: 10px; height: 10px; border-radius: 50%; background: #f5c98a; }
+  .lo { width: 10px; height: 10px; border-radius: 50%; border: 2.5px solid #e8a050; background: transparent; }
+
+  .rg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: .75rem; }
+  .rc { background: #3c2210; border-radius: 8px; padding: 8px 10px; text-align: center; border: 0.5px solid #5c3418; }
+  .rl { font-size: 10px; color: #a07850; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+  .rv { font-size: 18px; font-weight: 500; color: #fdf0e0; }
+  .rs { font-size: 10px; color: #a07850; margin-top: 1px; }
+
+  .div { border: none; border-top: 0.5px solid #5c3418; margin: 1rem 0; }
+
+  .qc { border-radius: 8px; padding: 10px 12px; text-align: center; background: #3c2210; border: 0.5px solid #6e3e1c; }
+  .ql { font-size: 10px; color: #a07850; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 3px; }
+  .qv { font-size: 24px; font-weight: 500; color: #fdf0e0; }
+  .qs { font-size: 10px; color: #a07850; margin-top: 2px; }
+
+  .fl { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 5px; margin-top: 4px; }
+  .fl-r { background: #5c1e10; color: #f07060; }
+  .fl-a { background: #5c3410; color: #f5a83a; }
+  .fl-g { background: #2a4010; color: #a8cc6a; }
+
+  .note { font-size: 12px; color: #a07850; margin-top: .75rem; padding: .5rem .75rem; border-left: 2px solid #6e3e1c; line-height: 1.5; }
+  .src { font-size: 10px; color: #a07850; font-style: italic; font-weight: 400; letter-spacing: 0; }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+    .g4 { grid-template-columns: repeat(2, 1fr); }
+    .slr { grid-template-columns: 120px 1fr 44px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Leah Ferguson &mdash; Daily Requirements Calculator</h1>
+  <div class="hdr">
+    <div class="av">LF</div>
+    <div>
+      <div class="nm">Leah Ferguson</div>
+      <div class="sb">Newtown &middot; June 2026 &middot; 9 days worked &middot; 11 remaining &middot; 20 total working days</div>
+      <div class="al">AL taken Fri 12 Jun &mdash; effective days reduced from 21 to 20</div>
+    </div>
+  </div>
+
+  <div class="st">MTD targets</div>
+  <div class="g4">
+    <div class="kc">
+      <div class="kl">NM MTD</div>
+      <div class="kv kv-a">29</div>
+      <div class="ks">of 78 &middot; should be 35</div>
+      <div class="pr"><span class="pb-badge b-a">-17% pace</span></div>
+      <div class="bar"><div class="barf" style="width:37%;background:#f5a83a"></div></div>
+    </div>
+    <div class="kc">
+      <div class="kl">PT MTD</div>
+      <div class="kv">6</div>
+      <div class="ks">of 14 &middot; should be 6</div>
+      <div class="pr"><span class="pb-badge b-g">on pace</span></div>
+    </div>
+    <div class="kc">
+      <div class="kl">BL%</div>
+      <div class="kv kv-g">28%</div>
+      <div class="ks">8 from 29 NM</div>
+      <div class="pr"><span class="pb-badge b-g">+5% ahead</span></div>
+    </div>
+    <div class="kc">
+      <div class="kl">NM/day needed</div>
+      <div class="kv kv-r">4.5</div>
+      <div class="ks">49 needed &middot; 11 days left</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="st">Last week&rsquo;s activity ratios &nbsp;<span class="src">(week ending 15 Jun &mdash; salesperson report)</span></div>
+    <div class="leg">
+      <div class="li"><div class="ld"></div> Current</div>
+      <div class="li"><div class="lo"></div> Last week actual</div>
+    </div>
+    <div class="slr">
+      <span class="sll">Spoke to rate</span>
+      <div class="slw"><div class="ref" id="r-ctr"></div><input type="range" min="5" max="60" value="26" step="1" id="sl-ctr"></div>
+      <span class="slv" id="o-ctr">26%</span>
+    </div>
+    <div class="slr">
+      <span class="sll">Contact to appointment</span>
+      <div class="slw"><div class="ref" id="r-ca"></div><input type="range" min="10" max="100" value="36" step="1" id="sl-ca"></div>
+      <span class="slv" id="o-ca">36%</span>
+    </div>
+    <div class="slr">
+      <span class="sll">Show rate</span>
+      <div class="slw"><div class="ref" id="r-show"></div><input type="range" min="30" max="100" value="69" step="1" id="sl-show"></div>
+      <span class="slv" id="o-show">69%</span>
+    </div>
+    <div class="slr">
+      <span class="sll">Close rate (appt)</span>
+      <div class="slw"><div class="ref" id="r-close"></div><input type="range" min="30" max="100" value="91" step="1" id="sl-close"></div>
+      <span class="slv" id="o-close">91%</span>
+    </div>
+    <div class="slr">
+      <span class="sll">Walk-in close</span>
+      <div class="slw"><div class="ref" id="r-wi"></div><input type="range" min="0" max="100" value="0" step="1" id="sl-wi"></div>
+      <span class="slv" id="o-wi">0%</span>
+    </div>
+    <div class="slr">
+      <span class="sll">Walk-ins/day</span>
+      <div class="slw"><div class="ref" id="r-wipd"></div><input type="range" min="0" max="10" value="0" step="1" id="sl-wipd"></div>
+      <span class="slv" id="o-wipd">0</span>
+    </div>
+    <div class="rg">
+      <div class="rc"><div class="rl">Calls last week</div><div class="rv">98</div><div class="rs">25 spoke to (26%)</div></div>
+      <div class="rc"><div class="rl">Appts booked</div><div class="rv">9</div><div class="rs">16 showed (69%)</div></div>
+      <div class="rc"><div class="rl">Appt sales</div><div class="rv">10</div><div class="rs">91% close &middot; 0 WI sales</div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="st">Daily activity required to hit target</div>
+    <div class="rg">
+      <div class="qc">
+        <div class="ql">Calls/day</div>
+        <div class="qv" id="q-calls">&#8212;</div>
+        <div class="qs">at <span id="q-ctr">26%</span> spoke to rate</div>
+        <div id="f-calls"></div>
+      </div>
+      <div class="qc">
+        <div class="ql">Appts/day</div>
+        <div class="qv" id="q-appts">&#8212;</div>
+        <div class="qs">at <span id="q-ca">36%</span> contact to appt</div>
+        <div id="f-appts"></div>
+      </div>
+      <div class="qc">
+        <div class="ql">NM/day needed</div>
+        <div class="qv" id="q-nm">4.5</div>
+        <div class="qs">incl. walk-ins</div>
+        <div id="f-nm"></div>
+      </div>
+    </div>
+    <div class="div"></div>
+    <div class="st">Pipeline breakdown</div>
+    <div class="rg">
+      <div class="qc">
+        <div class="ql">Spoke to/day</div>
+        <div class="qv" id="q-conv">&#8212;</div>
+        <div class="qs">conversations needed</div>
+      </div>
+      <div class="qc">
+        <div class="ql">Shows/day</div>
+        <div class="qv" id="q-shows">&#8212;</div>
+        <div class="qs">at <span id="q-show">69%</span> show rate</div>
+      </div>
+      <div class="qc">
+        <div class="ql">WI sales/day</div>
+        <div class="qv" id="q-wi">&#8212;</div>
+        <div class="qs">at <span id="q-wip">0%</span> close</div>
+      </div>
+    </div>
+    <div class="note" id="note"></div>
+  </div>
+</div>
+
+<script>
+const cfg = [
+  {sl:'sl-ctr',  dot:'r-ctr',  out:'o-ctr',  actual:26, min:5,  max:60,  fmt:v=>v+'%'},
+  {sl:'sl-ca',   dot:'r-ca',   out:'o-ca',   actual:36, min:10, max:100, fmt:v=>v+'%'},
+  {sl:'sl-show', dot:'r-show', out:'o-show', actual:69, min:30, max:100, fmt:v=>v+'%'},
+  {sl:'sl-close',dot:'r-close',out:'o-close',actual:91, min:30, max:100, fmt:v=>v+'%'},
+  {sl:'sl-wi',   dot:'r-wi',   out:'o-wi',   actual:0,  min:0,  max:100, fmt:v=>v+'%'},
+  {sl:'sl-wipd', dot:'r-wipd', out:'o-wipd', actual:0,  min:0,  max:10,  fmt:v=>v},
+];
+function positionDots() {
+  cfg.forEach(c => {
+    const input = document.getElementById(c.sl);
+    const dot   = document.getElementById(c.dot);
+    const w     = input.offsetWidth;
+    const pct   = (c.actual - c.min) / (c.max - c.min);
+    dot.style.left = (8 + pct * (w - 16) - 6) + 'px';
+  });
+}
+function flag(v, lo, hi) {
+  if (v > hi) return '<span class="fl fl-r">High</span>';
+  if (v > lo) return '<span class="fl fl-a">Stretch</span>';
+  return '<span class="fl fl-g">On track</span>';
+}
+function calc() {
+  cfg.forEach(c => {
+    document.getElementById(c.out).textContent = c.fmt(parseInt(document.getElementById(c.sl).value));
+  });
+  const ctr  = parseInt(document.getElementById('sl-ctr').value)/100;
+  const ca   = parseInt(document.getElementById('sl-ca').value)/100;
+  const show = parseInt(document.getElementById('sl-show').value)/100;
+  const cls  = parseInt(document.getElementById('sl-close').value)/100;
+  const wiC  = parseInt(document.getElementById('sl-wi').value)/100;
+  const wiPd = parseInt(document.getElementById('sl-wipd').value);
+  const nmPD = 49/11;
+  const wiS  = wiPd * wiC;
+  const nmA  = Math.max(0, nmPD - wiS);
+  const apts = (show>0&&cls>0) ? nmA/(show*cls) : 0;
+  const conv = ca>0 ? apts/ca : 0;
+  const calls= ctr>0 ? conv/ctr : 0;
+  const shws = apts*show;
+  document.getElementById('q-nm').textContent    = nmPD.toFixed(1);
+  document.getElementById('q-appts').textContent = apts.toFixed(1);
+  document.getElementById('q-calls').textContent = Math.ceil(calls);
+  document.getElementById('q-conv').textContent  = conv.toFixed(1);
+  document.getElementById('q-shows').textContent = shws.toFixed(1);
+  document.getElementById('q-wi').textContent    = wiS.toFixed(1);
+  document.getElementById('q-ctr').textContent   = Math.round(ctr*100)+'%';
+  document.getElementById('q-ca').textContent    = Math.round(ca*100)+'%';
+  document.getElementById('q-show').textContent  = Math.round(show*100)+'%';
+  document.getElementById('q-wip').textContent   = Math.round(wiC*100)+'%';
+  document.getElementById('f-calls').innerHTML   = flag(Math.ceil(calls),15,30);
+  document.getElementById('f-appts').innerHTML   = flag(apts,1,2.5);
+  document.getElementById('f-nm').innerHTML      = flag(nmPD,3.5,5);
+  const c = Math.ceil(calls);
+  document.getElementById('note').textContent = c>30
+    ? `\u26A0 At ${Math.round(ctr*100)}% spoke to rate Leah needs ~${c} calls/day \u2014 very high. Spoke to rate and contact-to-appointment are the biggest levers.`
+    : c>15
+    ? `~${c} calls \u2192 ${conv.toFixed(1)} spoke to \u2192 ${apts.toFixed(1)} appts booked \u2192 ${shws.toFixed(1)} shows \u2192 ${nmA.toFixed(1)} NM/day from appts. PT and BL on track \u2014 NM volume is the focus.`
+    : `Pipeline ratios are strong. ~${c} calls/day should close out the month.`;
+}
+cfg.forEach(c => document.getElementById(c.sl).addEventListener('input', calc));
+window.addEventListener('resize', positionDots);
+setTimeout(() => { positionDots(); calc(); }, 50);
+</script>
+</body>
+</html>
